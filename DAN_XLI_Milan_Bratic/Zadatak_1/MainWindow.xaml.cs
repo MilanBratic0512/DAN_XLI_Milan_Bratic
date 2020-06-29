@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +28,7 @@ namespace Zadatak_1
         string numberOfCopies;
         string text { get; set; }
         private int CurrentProgress;
+        private static readonly Regex _regex = new Regex("[^0-9.-]+");
 
         public MainWindow()
         {
@@ -86,6 +88,45 @@ namespace Zadatak_1
             {
                 label1.Content = e.Result.ToString();
             }
+        }
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            text = Text.Text;
+        }
+
+        private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            if (IsTextAllowed(Copies.Text))
+            {
+                numberOfCopies = Copies.Text;
+
+            }
+            else
+            {
+                numberOfCopies = "0";
+            }
+               
+          
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!bw.IsBusy)
+            {
+                bw.RunWorkerAsync();
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (bw.IsBusy)
+            {
+                bw.CancelAsync();
+            }
+        }
+        private static bool IsTextAllowed(string text)
+        {
+            return !_regex.IsMatch(text);
         }
     }
 }
